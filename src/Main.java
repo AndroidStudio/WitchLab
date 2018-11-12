@@ -1,3 +1,4 @@
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 
@@ -5,7 +6,7 @@ import java.net.ServerSocket;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        ServerSocket serverSocket = new ServerSocket(9700,2);
+        ServerSocket serverSocket = new ServerSocket(25565,2, InetAddress.getByName("192.168.0.100"));
         InetSocketAddress localSocketAddress = (InetSocketAddress) serverSocket.getLocalSocketAddress();
         System.out.println("Ip address: " + localSocketAddress.getAddress().getHostAddress());
         System.out.println("Port: " + localSocketAddress.getPort());
