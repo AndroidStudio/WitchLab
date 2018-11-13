@@ -26,4 +26,6 @@ public class SocketConstants {
     public static final String SYMBOL_ERROR = "symbol_error";
 
     public static final String RESET_BOARD = "reset_board";
+    public static final String COLOR_ERROR = "color_error";
+    public static final String PING_ECHO = "ping_echo";
 }

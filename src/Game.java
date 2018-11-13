@@ -9,10 +9,6 @@ import java.net.Socket;
 @SuppressWarnings("ALL")
 class Game {
 
-    Game() {
-
-    }
-
     public Player currentPlayer;
 
     class Player extends Thread {
@@ -24,7 +20,7 @@ class Game {
         private final String address;
 
         private Player opponent;
-        private String color;
+        private String color = "";
         private int symbol = -1;
 
         public String udid;
@@ -50,7 +46,9 @@ class Game {
                     String type = jsonObject.getString(SocketConstants.TYPE);
                     switch (type) {
                         case SocketConstants.PING:
-                            receivePing(jsonObject);
+                            udid = jsonObject.getString(SocketConstants.UDID);
+                            checkOpponentUdid();
+                            pingEcho();
                             break;
                         case SocketConstants.SYMBOL:
                             receiveSymbol(jsonObject);
@@ -77,7 +75,14 @@ class Game {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                clearBoard();
                 close();
+            }
+        }
+
+        private void checkOpponentUdid() throws Exception {
+            if(udid!=null && opponent.udid!=null && udid.equals(opponent.udid)){
+                throw new IllegalArgumentException();
             }
         }
 
@@ -86,6 +91,8 @@ class Game {
             ready = false;
             opponent.symbol = -1;
             opponent.ready = false;
+            color = "";
+            opponent.color = "";
             clearBoard();
             startNewGame();
             opponent.startNewGame();
@@ -171,7 +178,19 @@ class Game {
 
         private void receiveLedSettings(JSONObject jsonObject) throws Exception {
             color = jsonObject.getString(SocketConstants.COLOR);
-            colorOk();
+
+            if(opponent.color .equals(color)){
+                colorError();
+            }else {
+                colorOk();
+            }
+        }
+
+        private void colorError() throws Exception {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(SocketConstants.TYPE, SocketConstants.LED_SETTINGS);
+            jsonObject.put(SocketConstants.COLOR, SocketConstants.COLOR_ERROR);
+            sendMessage(jsonObject.toString());
         }
 
         private void colorOk() throws Exception {
@@ -207,14 +226,9 @@ class Game {
             sendMessage(jsonObject.toString());
         }
 
-        private void receivePing(JSONObject jsonObject) throws Exception {
-
-        }
-
-        private void sendPing() throws Exception {
+        private void pingEcho() throws Exception {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(SocketConstants.TYPE, SocketConstants.PING);
-            jsonObject.put(SocketConstants.TYPE, udid);
+            jsonObject.put(SocketConstants.TYPE, SocketConstants.PING_ECHO);
             sendMessage(jsonObject.toString());
         }
 
