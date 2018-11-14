@@ -19,12 +19,12 @@ class Game {
         private final Socket socket;
         private final String address;
 
+        private boolean ready = false;
         private String color = "";
         private Player opponent;
         private int symbol = -1;
 
         public String udid;
-        private boolean ready = false;
 
         Player(Socket socket) throws Exception {
             this.socket = socket;
@@ -91,7 +91,7 @@ class Game {
             if((udid == null && opponent.udid == null) || (udid.equals(opponent.udid))){
                 exetGame();
                 opponent.exetGame();
-               // throw new IllegalArgumentException();
+                //throw new IllegalArgumentException();
             }
         }
 
