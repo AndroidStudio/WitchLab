@@ -39,12 +39,16 @@ class Game {
         public void run() {
             try {
                 this.socket.setSoTimeout(10000);
-                initGame();
+
                 while (true) {
                     String message = readMessage();
                     JSONObject jsonObject = new JSONObject(message);
                     String type = jsonObject.getString(SocketConstants.TYPE);
                     switch (type) {
+                        case SocketConstants.INIT_GAME:
+                            udid = jsonObject.getString(SocketConstants.UDID);
+                            initGame();
+                            break;
                         case SocketConstants.PING:
                             udid = jsonObject.getString(SocketConstants.UDID);
                             checkOpponentUdid();
@@ -81,8 +85,13 @@ class Game {
         }
 
         private void checkOpponentUdid() throws Exception {
-            if(udid!=null && opponent.udid!=null && udid.equals(opponent.udid)){
-                throw new IllegalArgumentException();
+            System.out.println("opponent udid: " +  opponent.udid);
+            System.out.println("udid: " + udid);
+
+            if((udid==null && opponent.udid==null) || (udid.equals(opponent.udid))){
+                exetGame();
+                opponent.exetGame();
+               // throw new IllegalArgumentException();
             }
         }
 
