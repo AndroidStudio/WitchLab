@@ -19,8 +19,8 @@ class Game {
         private final Socket socket;
         private final String address;
 
-        private Player opponent;
         private String color = "";
+        private Player opponent;
         private int symbol = -1;
 
         public String udid;
@@ -38,7 +38,7 @@ class Game {
         @Override
         public void run() {
             try {
-                this.socket.setSoTimeout(10000);
+                this.socket.setSoTimeout(15000);
 
                 while (true) {
                     String message = readMessage();
@@ -88,7 +88,7 @@ class Game {
             System.out.println("opponent udid: " +  opponent.udid);
             System.out.println("udid: " + udid);
 
-            if((udid==null && opponent.udid==null) || (udid.equals(opponent.udid))){
+            if((udid == null && opponent.udid == null) || (udid.equals(opponent.udid))){
                 exetGame();
                 opponent.exetGame();
                // throw new IllegalArgumentException();
