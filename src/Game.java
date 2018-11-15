@@ -39,6 +39,7 @@ class Game {
         public void run() {
             try {
                 this.socket.setSoTimeout(15000);
+                initGame();
 
                 while (true) {
                     String message = readMessage();
